@@ -103,7 +103,7 @@
 		function productList() {
 			// Call Web API to get a list of Product
 			$.ajax({
-				url: '/api/Product/get.json',
+				url: '/crud/api/Product/get.json',
 				type: 'GET',
 				<!-- dataType: 'text', -->
 				dataType: 'json',
@@ -206,7 +206,8 @@
 		    //uses jQuery to set the value of each input field with the appropriate property of the product object retrieved from the API call
 		    function productToFields(product) {
 		        $("#productname").val(product.ProductName);
-		        $("#introdate").val(product.IntroductionDate);
+				var t = product.IntroductionDate.split(" ");
+		        $("#introdate").val(t[0]);
 		        $("#url").val(product.Url);
 		    }
 		}
