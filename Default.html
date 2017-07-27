@@ -29,7 +29,7 @@
                             <th>Delete</th>
 						</tr>
 						<tr id = "loading">
-							<th colspan = "5" align = "center"><img src = "giphy.gif"></th>
+							<th colspan = "5" align = "center"><img src = "giphy(1).gif"></th>
 						</tr>
 					</thead>
 				</table>
@@ -189,7 +189,7 @@
 		    // Call Web API to get a list of Products
 		    $.ajax({
 		        //the product ID is included on the URL line
-		        url: "/api/Product/get" + id + ".json",
+		        url: "/crud/api/Product/get" + id + ".json",
 		        type: 'GET',
 		        dataType: 'json',
 		        //If the Get method succeeds in returning a product object, call a function named productAddToFields and pass in the product object
@@ -216,7 +216,7 @@
         //Ajax is used to call the Post method in the Web API
 		function productAdd(product) {
 		    $.ajax({
-		        url: "/api/Product",
+		        url: "/crud/api/Product",
 		        type: 'POST',
 		        //the contentType property to specify that you’re passing JSON to the API
 		        contentType:
@@ -250,7 +250,7 @@
 
 		function productUpdate(product) {
 		    $.ajax({
-		        url: "/api/Product",
+		        url: "/crud/api/Product",
 		        //product object is sent via an Ajax call using the verb PUT
 		        type: 'PUT',
 		        contentType:
