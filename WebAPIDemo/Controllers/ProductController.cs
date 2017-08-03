@@ -40,6 +40,36 @@ namespace WebAPIDemo.Controllers
             return ret;
         }
 
+        [HttpPost()]
+        public IHttpActionResult Post(Product product)
+        {
+            IHttpActionResult ret = null;
+            if (Add(product))
+            {
+                ret = Created<Product>(Request.RequestUri +
+                     product.ProductId.ToString(), product);
+            }
+            else
+            {
+                ret = NotFound();
+            }
+            return ret;
+        }
+
+        private bool Add(Product product)
+        {
+            int newId = 0;
+            List<Product> list = new List<Product>();
+            list = CreateMockData();
+
+            newId = list.Max(p => p.ProductId);
+            newId++;
+            product.ProductId = newId;
+            list.Add(product);
+            // TODO: Change to ‘ false ’ to test NotFound()
+            return true;
+        }
+
         private List<Product> CreateMockData()
         {
             List<Product> ret = new List<Product>();

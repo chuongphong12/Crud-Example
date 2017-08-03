@@ -9,11 +9,49 @@
 <body>
     <script>
 		// Handle click event on Update button
-		function updateClick() {
-		}
+        function updateClick() {
+            // Build product object from inputs
+            Product = new Object();
+            Product.ProductName = $("#productname").val();
+            Product.IntroductionDate =
+                $("#introdate").val();
+            Product.Url = $("#url").val();
+            if ($("#updateButton").text().trim() ==
+                      "Add") {
+                productAdd(Product);
+            }
+        }
+
+        function formClear() {
+            $("#productname").val("");
+            $("#introdate").val("");
+            $("#url").val("");
+        }
 		// Handle click event on Add button
-		function addClick() {
-		}
+        function addClick() {
+            formClear();
+        }
+
+        function productAdd(product) {
+            $.ajax({
+                url: "/api/Product",
+                type: 'POST',
+                contentType:
+                   "application/json;charset=utf-8",
+                data: JSON.stringify(Product),
+                success: function (product) {
+                    productAddSuccess(product);
+                },
+                error: function (request, message, error) {
+                    handleException(request, message, error);
+                }
+            });
+        }
+
+        function productAddSuccess(product) {
+            productAddRow(product);
+            formClear();
+        }
 
 		function get_success(products){
 		}
@@ -80,7 +118,7 @@
 
 		function productToFields(product) {
 		  $("#productname").val(product.ProductName);
-		  var t = product.IntroductionDate.split("T");
+		  var t = product.IntroductionDate.split("_");
 		  $("#introdate").val(t[0]);
 		  $("#url").val(product.Url);
 		}
