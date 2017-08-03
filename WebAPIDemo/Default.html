@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CRUD Example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <script>
+		// Handle click event on Update button
+		function updateClick() {
+		}
+		// Handle click event on Add button
+		function addClick() {
+		}
+
+		function get_success(products){
+		}
+
+		function productList() {
+		  // Call Web API to get a list of Product
+		  $.ajax({
+			url: '/api/Product/',
+			type: 'GET',
+			dataType: 'json',
+			success: function (products) {
+				setTimeout(function(){
+					$('#loading').hide();
+					productListSuccess(products);
+				}, 1000);
+			},
+			error: function (request, message, error) {
+			  handleException(request, message, error);
+			}
+		  });
+		}
+
+		function productListSuccess(products) {
+			// Iterate over the collection of data
+			$.each(products, function (index, product) {
+				// Add a row to the Product table
+				productAddRow(product);
+		  });
+		}
+
+		function productAddRow(product) {
+		 // Check if <tbody> tag exists, add one if not
+		  if ($("#productTable tbody").length == 0) {
+		   $("#productTable").append("<tbody></tbody>");
+		  }
+		  // Append row to <table>
+		  $("#productTable tbody").append(
+			productBuildTableRow(product));
+		}
+
+		function productGet(ctl){
+		  // Get product id from data- attribute
+		  var id = $(ctl).data("id");
+
+		  // Store product id in hidden field
+		  $("#productid").val(id);
+
+		  // Call Web API to get a list of Products
+		  $.ajax({
+			url: "/api/Product/"+ id,
+			type: 'GET',
+			dataType: 'json',
+			success: function (product) {
+			  productToFields(product);
+
+			  // Change Update Button Text
+			  $("#updateButton").text("Update");
+			},
+			error: function (request, message, error) {
+			  handleException(request, message, error);
+			}
+		  });
+		}
+
+		function productToFields(product) {
+		  $("#productname").val(product.ProductName);
+		  var t = product.IntroductionDate.split("T");
+		  $("#introdate").val(t[0]);
+		  $("#url").val(product.Url);
+		}
+		function productBuildTableRow(product) {
+		  var ret =
+			"<tr>" +
+			"<td>" +
+				"<button type='button' class='btn btn-default' onclick='productGet(this)' data-id='" + product.ProductId + "' >" +
+					"<span class='glyphicon glyphicon-edit'></span>" +
+				"</button>" +
+			"</td>" +
+			 "<td>" + product.ProductName + "</td>" +
+			 "<td>" + product.IntroductionDate + "</td>" +
+			 "<td>" + product.Url + "</td>" +
+			"</tr>";
+		  return ret;
+		}
+
+		function handleException(request, message,
+								 error) {
+		  var msg = "";
+		  msg += "Code: " + request.status + "\n";
+		  msg += "Text: " + request.statusText + "\n";
+		  if (request.responseJSON != null) {
+			msg += "Message" +
+				request.responseJSON.Message + "\n";
+		  }
+		  alert(msg);
+		}
+
+		$(document).ready(function (){
+			productList();
+		});
+
+    </script>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Paul’s Training Company</h2>
+            </div>
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="productTable" class="table table-bordered table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Edit</th>
+                            <th>Product Name</th>
+                            <th>Introduction Date</th>
+                            <th>URL</th>
+                        </tr>
+                        <tr id="loading">
+                            <td colspan="100%" align="center"><img src="giphy.gif"></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-6">
+                <button type="button" id="addButton" class="btn btn-primary" onclick="addClick();">
+                    Add Product
+                </button>
+            </div>
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Product Information
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="productname">Product Name</label>
+                            <input type="text" id="productname"
+                                   class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="introdate">
+                                Introduction Date
+                            </label>
+                            <input type="date" id="introdate"
+                                   class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="url">URL</label>
+                            <input type="url" id="url"
+                                   class="form-control" />
+                        </div>
+                        <input type="hidden" id="productid" value="0" />
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" id="updateButton"
+                                        class="btn btn-primary"
+                                        onclick="updateClick();">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
